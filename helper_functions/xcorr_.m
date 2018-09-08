@@ -1,4 +1,4 @@
-function a = xcorr(x,y)
+function a = xcorr_(x,y)
 a = zeros(size(x,1),size(x,2)+size(y,2)-1);
 N = size(x,2);
 
