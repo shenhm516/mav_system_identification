@@ -1,6 +1,6 @@
 # mav_system_identification
 
-Matlab scripts to perform system identification for DJI 100, forked from https://github.com/ethz-asl/mav_system_identification. We uses built-in functions of MATLAB to read and parse ROS messages rather than matlab_rosbag package. Also, this repository provides option to split one file into two files for estimation and validation.
+Matlab scripts to perform system identification for DJI 100, forked from https://github.com/ethz-asl/mav_system_identification. We use built-in functions of MATLAB to read and parse ROS messages rather than matlab_rosbag package. Also, this repository provides option to split one file into two files for estimation and validation.
 
 ## Running the tests
 
