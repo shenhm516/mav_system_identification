@@ -9,12 +9,17 @@ np = 1;
 nz = 0;
 use_one_file = false;
 bag1_ratio = 0.5;% 50% for bag 1, 50% for bag 2, ignore if use_one_file is false
-bagfile_exp1 =  'ouster_cut1.bag';
-bagfile_exp2 =  'ouster_cut2.bag'; % ignore if use_one_file is true
+bagfile_exp1 =  'bravo_roll.bag';
+bagfile_exp2 =  'bravo_pitch.bag'; % ignore if use_one_file is true
 
 topic_imu = '/matrice/imu';
 topic_vcdata = '/matrice/command/roll_pitch_yawrate_thrust';
 topic_rc = '/matrice/rc';
+
+bag1_start = 23;
+bag2_start = 23;
+bag1_end = 10;
+bag2_end = 10;
 
 if (use_one_file)
     if ((bag1_ratio <= 0) || (bag1_ratio >= 1))
@@ -121,7 +126,7 @@ Experiment2.pitch_cmd  = Experiment2.RCData.pitch;
 close all;
 %%
 % *Plot attitude from experiment 1*
-figure(2);
+figure;
 title('Experiment 1 Data');
 subplot(2,1,1);
 plot(Experiment1.IMU.t, Experiment1.rpy_imu(1,:)*180/pi, ...
@@ -145,7 +150,7 @@ title('pitch from IMU');
 
 %%
 % *Plot position from experiment 2*
-figure(4);
+figure;
 %%
 % *Plot attitude from experiment 2*
 title('Experiment 2 Data');
@@ -181,10 +186,10 @@ Experiment1.Ts = mean(diff(Experiment1.t));
 
 %%
 % *get rid of first and last 10 seconds (to remove ground and transient effects)*
-Experiment1.u1 = Experiment1.u1(Experiment1.t>10 & ...
-    Experiment1.t < Experiment1.t(end)-10);
-Experiment1.y1 = Experiment1.y1(Experiment1.t>10 &...
-    Experiment1.t < Experiment1.t(end)-10);
+Experiment1.u1 = Experiment1.u1(Experiment1.t > bag1_start & ...
+    Experiment1.t < Experiment1.t(end) - bag1_end);
+Experiment1.y1 = Experiment1.y1(Experiment1.t > bag1_start &...
+    Experiment1.t < Experiment1.t(end) - bag1_end);
 %Experiment1.t = Experiment1.t(Experiment1.t>10 & Experiment1.t < Experiment1.t(end)-10);
 
 
@@ -210,10 +215,10 @@ Experiment2.Ts = mean(diff(Experiment2.t));
 
 
 %get rid of first and last 10 seconds (to remove ground and transient effects)
-Experiment2.u1 = Experiment2.u1(Experiment2.t>10 &...
-    Experiment2.t < Experiment2.t(end)-10);
-Experiment2.y1 = Experiment2.y1(Experiment2.t>10 &...
-    Experiment2.t < Experiment2.t(end)-10);
+Experiment2.u1 = Experiment2.u1(Experiment2.t > bag2_start &...
+    Experiment2.t < Experiment2.t(end) - bag2_end);
+Experiment2.y1 = Experiment2.y1(Experiment2.t > bag2_start &...
+    Experiment2.t < Experiment2.t(end) - bag2_end);
 %Experiment2.t = Experiment2.t(Experiment2.t>10 & Experiment2.t < Experiment2.t(end)-10);
 
 roll_data2 = iddata(Experiment2.y1',Experiment2.u1',Experiment2.Ts,...
@@ -266,12 +271,12 @@ Experiment1.u2 = Experiment1.pitch_cmd;
 Experiment1.y2 = Experiment1.rpy_imu(2,:);
 
 %get rid of first and last 10 seconds (to remove ground and transient effects)
-Experiment1.u2 = Experiment1.u2(Experiment1.t>10 &...
-    Experiment1.t < Experiment1.t(end)-10);
-Experiment1.y2 = Experiment1.y2(Experiment1.t>10 &...
-    Experiment1.t < Experiment1.t(end)-10);
-Experiment1.t = Experiment1.t(Experiment1.t>10 &...
-    Experiment1.t < Experiment1.t(end)-10);
+Experiment1.u2 = Experiment1.u2(Experiment1.t > bag1_start &...
+    Experiment1.t < Experiment1.t(end) - bag1_end);
+Experiment1.y2 = Experiment1.y2(Experiment1.t > bag1_start &...
+    Experiment1.t < Experiment1.t(end) - bag1_end);
+Experiment1.t = Experiment1.t(Experiment1.t > bag1_start &...
+    Experiment1.t < Experiment1.t(end) - bag1_end);
 
 pitch_data1 = iddata(Experiment1.y2',Experiment1.u2',Experiment1.Ts,...
     'ExperimentName', 'PitchSysID_1', 'InputName','pitch_{cmd}',...
@@ -286,12 +291,12 @@ Experiment2.y2 = Experiment2.rpy_imu(2,:);
 
 
 %get rid of first and last 10 seconds (to remove ground and transient effects)
-Experiment2.u2 = Experiment2.u2(Experiment2.t>10 &...
-    Experiment2.t < Experiment2.t(end)-10);
-Experiment2.y2 = Experiment2.y2(Experiment2.t>10 &...
-    Experiment2.t < Experiment2.t(end)-10);
-Experiment2.t = Experiment2.t(Experiment2.t>10 &...
-    Experiment2.t < Experiment2.t(end)-10);
+Experiment2.u2 = Experiment2.u2(Experiment2.t > bag2_start &...
+    Experiment2.t < Experiment2.t(end) - bag2_end);
+Experiment2.y2 = Experiment2.y2(Experiment2.t > bag2_start &...
+    Experiment2.t < Experiment2.t(end) - bag2_end);
+Experiment2.t = Experiment2.t(Experiment2.t > bag2_start &...
+    Experiment2.t < Experiment2.t(end) - bag2_end);
 
 pitch_data2 = iddata(Experiment2.y2',Experiment2.u2',Experiment2.Ts, ...
     'ExperimentName', 'PitchSysID_2', 'InputName','pitch_{cmd}',...
